@@ -1,20 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import TaskCard from "./TaskCard";
+import Button from "../common/Button";
 
-function TaskList({ tasks, currentTask, onStartTask, onCompleteTask }) {
+function TaskList({
+  tasks,
+  currentTask,
+  onStartTask,
+  onCompleteTask,
+  onEditTask,
+  onDeleteTasks,
+}) {
+  const [selectedTasks, setSelectedTasks] = useState([]);
+
+  const handleSelectTask = (task) => {
+    setSelectedTasks((prevSelected) =>
+      prevSelected.includes(task)
+        ? prevSelected.filter((t) => t !== task)
+        : [...prevSelected, task]
+    );
+  };
+
   return (
-    <section>
+    <section className="bg-cream p-4 rounded-lg shadow">
       <h2 className="text-2xl font-futura-medium mb-4">Your Tasks</h2>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {tasks.map((task, index) => (
-          <TaskCard
-            key={index}
-            task={task}
-            isCurrentTask={currentTask === task}
-            onStart={() => onStartTask(task)}
-            onComplete={() => onCompleteTask(task)}
-          />
+          <div key={index} className="relative">
+            <input
+              type="checkbox"
+              checked={selectedTasks.includes(task)}
+              onChange={() => handleSelectTask(task)}
+              className="absolute top-2 right-2"
+            />
+            <TaskCard
+              task={task}
+              isCurrentTask={currentTask === task}
+              onStart={() => onStartTask(task)}
+              onComplete={() => onCompleteTask(task)}
+              onEdit={() => onEditTask(task)}
+            />
+          </div>
         ))}
+      </div>
+
+      <div className="mt-4">
+        <Button onClick={() => onDeleteTasks(selectedTasks)} color="red">
+          Delete
+        </Button>
       </div>
     </section>
   );

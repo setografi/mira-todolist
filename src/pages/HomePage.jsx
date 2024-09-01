@@ -1,32 +1,70 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/layout/Sidebar";
+import About from "../components/layout/About";
 import ProgressBar from "../components/progress/ProgressBar";
 import LevelInfo from "../components/progress/LevelInfo";
 import AddTaskForm from "../components/tasks/AddTaskForm";
+import EditTaskPopup from "../components/tasks/EditTaskPopup";
 import TaskList from "../components/tasks/TaskList";
+import Achievements from "../components/achievements/Achievements";
+
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { calculateNewXpAndLevel } from "../utils/xpCalculations";
+import { checkAchievements } from "../utils/achievementUtils";
 
 function HomePage() {
   const [tasks, setTasks] = useLocalStorage("mira_tasks", []);
+  const [editingTask, setEditingTask] = useState(null);
   const [currentTask, setCurrentTask] = useState(null);
   const [xp, setXp] = useLocalStorage("mira_xp", 0);
   const [level, setLevel] = useLocalStorage("mira_level", 1);
+  const [xpPerLevel, setXpPerLevel] = useState(100);
+  const [newAchievement, setNewAchievement] = useState(null);
+  const [activeSection, setActiveSection] = useState("tasks");
 
   useEffect(() => {
     let timer;
     if (currentTask) {
       timer = setInterval(() => {
-        const { newXp, newLevel } = calculateNewXpAndLevel(xp, level);
+        const { newXp, newLevel, xpPerLevel } = calculateNewXpAndLevel(
+          xp,
+          level
+        );
         setXp(newXp);
         setLevel(newLevel);
-      }, 60000); // Increase XP every minute
+        setXpPerLevel(xpPerLevel);
+
+        const achievementCheck = checkAchievements(level, xp, tasks);
+        const achievements = achievementCheck
+          ? achievementCheck.achievements
+          : [];
+
+        if (achievements.length > 0) {
+          setNewAchievement({
+            message: achievementCheck.message,
+            achievements,
+          });
+        } else {
+          setNewAchievement(null);
+        }
+      }, 60000);
     }
     return () => clearInterval(timer);
   }, [currentTask, xp, level]);
 
   const addTask = (newTask) => {
-    setTasks([...tasks, { ...newTask, completed: false }]);
+    if (editingTask) {
+      setTasks(
+        tasks.map((task) =>
+          task === editingTask
+            ? { ...newTask, completed: task.completed }
+            : task
+        )
+      );
+      setEditingTask(null);
+    } else {
+      setTasks([...tasks, { ...newTask, completed: false }]);
+    }
   };
 
   const startTask = (task) => {
@@ -42,25 +80,76 @@ function HomePage() {
     setCurrentTask(null);
   };
 
+  const editTask = (taskToEdit) => {
+    setEditingTask(taskToEdit);
+  };
+
+  const handleSaveTask = (updatedTask) => {
+    setTasks(tasks.map((task) => (task === editingTask ? updatedTask : task)));
+    setEditingTask(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTask(null);
+  };
+
+  const deleteTasks = (tasksToDelete) => {
+    setTasks(tasks.filter((task) => !tasksToDelete.includes(task)));
+    // setSelectedTasks([]);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-white text-gray-800 font-roboto">
-      <div className="flex-grow container mx-auto p-4 flex">
-        <Sidebar />
+      <div className="flex-col md:flex-row container mx-auto p-4 flex">
+        <Sidebar setActiveSection={setActiveSection} />
 
-        <main className="w-3/4">
-          <section className="mb-8 bg-blue-100 p-4 rounded-lg">
-            <h2 className="text-2xl font-futura-medium mb-4">Your Progress</h2>
-            <LevelInfo level={level} xp={xp} />
-            <ProgressBar xp={xp} level={level} />
-          </section>
-          <AddTaskForm onAddTask={addTask} />
-          <TaskList
-            tasks={tasks}
-            currentTask={currentTask}
-            onStartTask={startTask}
-            onCompleteTask={completeTask}
-          />
+        <main className="w-full md:w-3/4">
+          {newAchievement && (
+            <div className="bg-success text-white p-4 rounded-lg mb-4 shadow">
+              <p>You unlocked a new achievement: {newAchievement.message}!</p>
+            </div>
+          )}
+
+          {activeSection === "tasks" && (
+            <>
+              <section className="mb-8 bg-cream p-4 rounded-lg shadow">
+                <h2 className="text-2xl font-futura-medium mb-4">
+                  Your Progress
+                </h2>
+                <LevelInfo level={level} xp={xp} xpPerLevel={xpPerLevel} />
+                <ProgressBar xp={xp} level={level} />
+              </section>
+
+              <AddTaskForm onAddTask={addTask} />
+              <TaskList
+                tasks={tasks}
+                currentTask={currentTask}
+                onStartTask={startTask}
+                onCompleteTask={completeTask}
+                onEditTask={editTask}
+                onDeleteTasks={deleteTasks}
+              />
+            </>
+          )}
+
+          {activeSection === "achievements" && (
+            <Achievements level={level} xp={xp} tasks={tasks} />
+          )}
+
+          {activeSection === "profile" && (
+            <div>{/* Profile content goes here */}</div>
+          )}
+
+          {activeSection === "about" && <About />}
         </main>
+
+        {editingTask && (
+          <EditTaskPopup
+            task={editingTask}
+            onSave={handleSaveTask}
+            onCancel={handleCancelEdit}
+          />
+        )}
       </div>
     </div>
   );

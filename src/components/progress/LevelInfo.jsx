@@ -1,11 +1,11 @@
 import React from "react";
 
-function LevelInfo({ level, xp }) {
+function LevelInfo({ level, xp, xpPerLevel }) {
   return (
     <>
       <p className="font-roboto">Level: {level}</p>
       <p className="font-roboto">
-        XP: {xp} / {level * 100}
+        XP: {xp} / {xpPerLevel}
       </p>
     </>
   );
