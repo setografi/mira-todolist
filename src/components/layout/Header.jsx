@@ -2,11 +2,15 @@ import React from "react";
 
 function Header() {
   return (
-    <header className="bg-blue-500 text-white p-4">
-      <h1 className="text-3xl font-futura-bold font-bold">MIRA</h1>
-      <p className="font-futura-medium">
-        Motivational Interactive Reward Assistant
-      </p>
+    <header className="container mx-auto px-[30px] pt-[40px] pb-4 sticky top-0 bg-white z-20">
+      <div className="flex flex-col">
+        <p className="text-lg md:text-xl font-futura-bold font-bold">MIRA</p>
+        <div className="flex justify-between items-center">
+          <h1 className="font-futura-medium text-base">
+            Motivational Interactive Reward Assistant
+          </h1>
+        </div>
+      </div>
     </header>
   );
 }

@@ -20,6 +20,7 @@ function HomePage() {
   const [level, setLevel] = useLocalStorage("mira_level", 1);
   const [xpPerLevel, setXpPerLevel] = useState(100);
   const [newAchievement, setNewAchievement] = useState(null);
+  const [showAchievement, setShowAchievement] = useState(false);
   const [activeSection, setActiveSection] = useState("tasks");
 
   useEffect(() => {
@@ -44,8 +45,16 @@ function HomePage() {
             message: achievementCheck.message,
             achievements,
           });
+          setShowAchievement(true);
+
+          // Hide the achievement after 3 seconds
+          setTimeout(() => {
+            setShowAchievement(false);
+            setNewAchievement(null);
+          }, 3000);
         } else {
           setNewAchievement(null);
+          setShowAchievement(false);
         }
       }, 60000);
     }
@@ -100,11 +109,11 @@ function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white text-gray-800 font-roboto">
-      <div className="flex-col md:flex-row container mx-auto p-4 flex">
+      <div className="flex-col md:flex-row container mx-auto p-4 flex gap-6">
         <Sidebar setActiveSection={setActiveSection} />
 
-        <main className="w-full md:w-3/4">
-          {newAchievement && (
+        <main className="flex flex-col w-full gap-6">
+          {showAchievement && newAchievement && (
             <div className="bg-success text-white p-4 rounded-lg mb-4 shadow">
               <p>You unlocked a new achievement: {newAchievement.message}!</p>
             </div>
@@ -112,12 +121,14 @@ function HomePage() {
 
           {activeSection === "tasks" && (
             <>
-              <section className="mb-8 bg-cream p-4 rounded-lg shadow">
-                <h2 className="text-2xl font-futura-medium mb-4">
+              <section className="gradient-bg text-black p-[30px] md:h-[23rem] lg:h-[200px] w-full rounded-lg shadow-md">
+                <h2 className="text-2xl font-futura-medium mb-[31px]">
                   Your Progress
                 </h2>
-                <LevelInfo level={level} xp={xp} xpPerLevel={xpPerLevel} />
-                <ProgressBar xp={xp} level={level} />
+                <div className="flex flex-col gap-2">
+                  <LevelInfo level={level} xp={xp} xpPerLevel={xpPerLevel} />
+                  <ProgressBar xp={xp} level={level} />
+                </div>
               </section>
 
               <AddTaskForm onAddTask={addTask} />

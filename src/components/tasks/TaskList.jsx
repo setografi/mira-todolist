@@ -21,7 +21,7 @@ function TaskList({
   };
 
   return (
-    <section className="bg-cream p-4 rounded-lg shadow">
+    <section className="w-full p-[30px] rounded-lg shadow-md">
       <h2 className="text-2xl font-futura-medium mb-4">Your Tasks</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -44,7 +44,7 @@ function TaskList({
         ))}
       </div>
 
-      <div className="mt-4">
+      <div className="flex items-center justify-end mt-4">
         <Button onClick={() => onDeleteTasks(selectedTasks)} color="red">
           Delete
         </Button>
