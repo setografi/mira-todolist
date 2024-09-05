@@ -2,7 +2,7 @@ import React from "react";
 
 function About() {
   return (
-    <section className="bg-white p-6 rounded-lg shadow-lg mb-8">
+    <section className="w-full p-[30px] rounded-lg shadow-md">
       <h2 className="text-3xl font-futura-bold text-gray-800 mb-4">
         Apa itu MIRA?
       </h2>

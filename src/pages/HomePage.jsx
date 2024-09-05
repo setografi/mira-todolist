@@ -148,7 +148,9 @@ function HomePage() {
           )}
 
           {activeSection === "profile" && (
-            <div>{/* Profile content goes here */}</div>
+            <div className="w-full p-[30px] rounded-lg shadow-md">
+              Coming Soon!
+            </div>
           )}
 
           {activeSection === "about" && <About />}

@@ -35,50 +35,67 @@ function EditTaskPopup({ task, onSave, onCancel }) {
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-futura-medium mb-4">Edit Task</h2>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Task Name"
-          className="border p-2 rounded w-full mb-4"
-        />
-        <input
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          placeholder="Category"
-          className="border p-2 rounded w-full mb-4"
-        />
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-          className="border p-2 rounded w-full mb-4"
-        />
 
-        <div className="flex flex-col mb-4">
-          <label htmlFor="taskColor" className="text-xs text-black mb-2">
-            Color
-          </label>
-          <select
-            id="taskColor"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
+        <div className="flex flex-col gap-4 mb-4">
+          <div className="flex flex-col font-roboto">
+            <label className="text-xs text-black mb-2">Task Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Task Name"
+              className="text-sm p-2 border rounded-md"
+            />
+          </div>
+
+          <div className="flex flex-col font-roboto">
+            <label htmlFor="taskCategory" className="text-xs text-black mb-2">
+              Category
+            </label>
+            <input
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="Category"
+              className="text-sm p-2 border rounded-md"
+            />
+          </div>
+
+          <div className="flex flex-col font-roboto">
+            <label className="text-xs text-black mb-2">Description</label>
+          </div>
+
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
             className="text-sm p-2 border rounded-md"
-          >
-            {colors.map((color) => (
-              <option key={color.value} value={color.value}>
-                {color.name}
-              </option>
-            ))}
-          </select>
+          />
+
+          <div className="flex flex-col font-roboto">
+            <label htmlFor="taskColor" className="text-xs text-black mb-2">
+              Color
+            </label>
+            <select
+              id="taskColor"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="text-sm p-2 border rounded-md"
+            >
+              {colors.map((color) => (
+                <option key={color.value} value={color.value}>
+                  {color.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="flex justify-end gap-2">
           <Button onClick={handleSave} color="blue">
             Save
           </Button>
-          <Button onClick={onCancel} color="blue">
+          <Button onClick={onCancel} color="red">
             Cancel
           </Button>
         </div>

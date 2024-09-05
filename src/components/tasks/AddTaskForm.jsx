@@ -75,6 +75,7 @@ function AddTaskForm({ onAddTask }) {
           <label htmlFor="taskDescription" className="text-xs text-black mb-2">
             Description
           </label>
+
           <textarea
             id="taskDescription"
             placeholder="Task description"

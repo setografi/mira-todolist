@@ -25,7 +25,7 @@ function TaskCard({ task, isCurrentTask, onStart, onComplete, onEdit }) {
 
       <div className="flex flex-col md:flex-row justify-end gap-2 md:gap-4">
         {task.completed ? (
-          <span className="text-success font-roboto flex items-center">
+          <span className="bg-success text-white font-roboto px-4 py-2 rounded flex items-center justify-center">
             Completed
           </span>
         ) : isCurrentTask ? (

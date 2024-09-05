@@ -22,7 +22,7 @@ function Achievements({ level, xp, tasks }) {
   });
 
   return (
-    <section className="mb-8">
+    <section className="w-full p-[30px] rounded-lg shadow-md">
       <h2 className="text-2xl font-futura-medium mb-4">Achievements</h2>
       <ul className="list-disc ml-5 font-roboto">
         {unlockedAchievements.length > 0 ? (
